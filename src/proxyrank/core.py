@@ -67,10 +67,13 @@ def _null_draws(fn, proxy_hat, real_hat, draws, rng):
     return _score(fn, shuffled, real_hat[None]), False
 
 
-def _tail(sample, observed, higher):
-    # P(sample at least as good as observed); small tolerance for float ties
+def _tail(sample, observed, higher, exact=False):
+    # P(sample at least as good as observed); small tolerance for float ties.
+    # A Monte Carlo estimate counts the observed value as one more draw, so it is
+    # never exactly 0 (Phipson & Smyth 2010); an enumerated null needs no correction.
     eps = 1e-12
-    return float(np.mean(sample >= observed - eps) if higher else np.mean(sample <= observed + eps))
+    hits = np.sum(sample >= observed - eps) if higher else np.sum(sample <= observed + eps)
+    return float(hits / sample.size if exact else (hits + 1) / (sample.size + 1))
 
 
 @dataclass(frozen=True)
@@ -127,6 +130,7 @@ def validate(
     draws=20_000,
     prior=JEFFREYS,
     seed=0,
+    higher_is_better=None,
 ) -> ValidationResult:
     """Score a proxy evaluator against real evaluation, with uncertainty.
 
@@ -143,8 +147,10 @@ def validate(
         draws: posterior / Monte Carlo draws.
         prior: Beta prior on every success rate (default Jeffreys).
         seed: RNG seed; results are deterministic given it.
+        higher_is_better: direction of a callable metric (default True);
+            must match the built-in direction when ``metric`` is a name.
     """
-    name, fn, higher = resolve(metric)
+    name, fn, higher = resolve(metric, higher_is_better)
     rng = np.random.default_rng(seed)
     k, n = _counts(real_successes, real_trials)
     proxy_hat = np.atleast_2d(np.asarray(proxy, dtype=float))
@@ -179,7 +185,7 @@ def validate(
         ceiling_interval=tuple(float(x) for x in np.nanquantile(ceiling, q)),
         # how often a perfect proxy scores no better than the observed proxy
         p_vs_ceiling=_tail(ceiling, observed, not higher),
-        null_p=_tail(null, observed, higher),
+        null_p=_tail(null, observed, higher, exact),
         null_exact=exact,
         n_policies=k.shape[-1],
         n_tasks=k.shape[0],
@@ -214,13 +220,14 @@ def compare(
     draws=20_000,
     prior=JEFFREYS,
     seed=0,
+    higher_is_better=None,
 ) -> Comparison:
     """Compare two proxies scored against the *same* real evaluation.
 
     Both proxies are scored on shared posterior draws of the real rates, so the
     real-side noise they have in common cancels in the difference.
     """
-    name, fn, higher = resolve(metric)
+    name, fn, higher = resolve(metric, higher_is_better)
     rng = np.random.default_rng(seed)
     k, n = _counts(real_successes, real_trials)
     a = np.atleast_2d(np.asarray(proxy_a, dtype=float))

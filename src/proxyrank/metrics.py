@@ -83,11 +83,13 @@ METRICS = {
 HIGHER_IS_BETTER = {"mmrv": False, "spearman": True, "pearson": True, "kendall": True, "pairwise_accuracy": True}
 
 
-def resolve(metric):
+def resolve(metric, higher_is_better=None):
     """Return (name, fn, higher_is_better) for a metric name or callable."""
     if callable(metric):
-        return getattr(metric, "__name__", "custom"), metric, True
-    try:
-        return metric, METRICS[metric], HIGHER_IS_BETTER[metric]
-    except KeyError:
-        raise ValueError(f"unknown metric {metric!r}; choose from {sorted(METRICS)}") from None
+        higher = True if higher_is_better is None else bool(higher_is_better)
+        return getattr(metric, "__name__", "custom"), metric, higher
+    if metric not in METRICS:
+        raise ValueError(f"unknown metric {metric!r}; choose from {sorted(METRICS)}")
+    if higher_is_better is not None and bool(higher_is_better) != HIGHER_IS_BETTER[metric]:
+        raise ValueError(f"{metric} is {'higher' if HIGHER_IS_BETTER[metric] else 'lower'}-is-better")
+    return metric, METRICS[metric], HIGHER_IS_BETTER[metric]

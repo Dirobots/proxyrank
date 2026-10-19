@@ -83,3 +83,23 @@ def test_null_p_is_calibrated_under_random_proxy():
         k = rng.binomial(1000, real_rates)
         ps.append(validate(rng.random(6), k, [1000] * 6, draws=200, seed=i).null_p)
     assert 0.05 < np.mean(np.array(ps) <= 0.1) < 0.16
+
+
+def test_monte_carlo_p_values_are_never_zero():
+    # 2 tasks force the Monte Carlo null; a perfect proxy on far-apart rates beats every shuffle
+    real = np.array([[10, 30, 50, 70, 90, 99]] * 2)
+    res = validate(real / 100, real, np.full_like(real, 100), metric="spearman", draws=2000)
+    assert not res.null_exact
+    assert res.null_p == pytest.approx(1 / 2001)
+    assert res.p_vs_ceiling > 0
+
+
+def test_callable_metric_direction():
+    def l1(proxy, real):
+        return np.abs(proxy - real).mean(axis=-1)
+
+    real = np.array([10, 30, 50, 70, 90])
+    close = validate(real / 100, real, [100] * 5, metric=l1, higher_is_better=False)
+    assert close.null_p < 0.05
+    with pytest.raises(ValueError):
+        validate(real / 100, real, [100] * 5, metric="mmrv", higher_is_better=True)

@@ -118,6 +118,18 @@ def scores(order):
     return np.array([len(order) - order.index(p) for p in "ABCDE"], dtype=float)
 
 
+def _sum_tail(samples, threshold):
+    # P(sum of independent uniform draws, one from each sample, >= threshold)
+    vals, cnt = np.array([0.0]), np.array([1.0])
+    for x in samples:
+        v, c = np.unique(np.round(x, 9), return_counts=True)
+        vals = np.add.outer(vals, v).ravel()
+        cnt = np.outer(cnt, c / c.sum()).ravel()
+        vals, inv = np.unique(np.round(vals, 9), return_inverse=True)
+        cnt = np.bincount(inv, weights=cnt)
+    return float(cnt[vals >= threshold - 1e-9].sum())
+
+
 def recipe():
     print("## Practical Recipe (arXiv:2606.10366), 5 policies, rankings only\n")
     print("Only rankings are published, so intervals and ceilings cannot be computed; the exact")
@@ -133,10 +145,10 @@ def recipe():
             assert abs(rho - RECIPE_RHO[sim][dim]) < 1e-9, (sim, dim, rho)
             rhos.append(rho)
             nulls.append(pr.spearman(proxy[perms], real))
-        # exact null of the mean: each dimension shuffled independently
-        grid = np.array(np.meshgrid(*nulls, indexing="ij")).reshape(len(nulls), -1).mean(0)
+        # exact null of the mean: each dimension shuffled independently. The full
+        # grid is 120^dims values (6.6 GB for 4 dims), so convolve value counts instead.
         obs = float(np.mean(rhos))
-        p = float(np.mean(grid >= obs - 1e-12))
+        p = _sum_tail(nulls, obs * len(nulls))
         print(f"| {sim} | {len(dims)} | {obs:.3f} | {np.mean(list(RECIPE_RHO[sim].values())):.3f} | {p:.4f} |")
     single = pr.spearman(scores("ABCDE")[perms], scores("ABCDE"))
     print(f"\nSingle dimension, N=5: P(random ρ ≥ 0.7) = {np.mean(single >= 0.7 - 1e-12):.3f}, "
