@@ -4,6 +4,8 @@ import numpy as np
 import pytest
 
 from proxyrank import compare, validate
+from proxyrank.linked import linked_rates
+from proxyrank.metrics import mmrv
 
 
 def test_null_is_exact_for_small_n():
@@ -127,3 +129,24 @@ def test_linked_interval_stays_wide_for_unrelated_proxy():
 def test_bad_model_name():
     with pytest.raises(ValueError):
         validate([0.1, 0.5, 0.9], [1, 5, 9], 10, model="hierarchical")
+
+
+def test_linked_mmrv_covers_with_extreme_cells():
+    # wide true spread and 8 trials leave cells at 0/8 or 8/8; the normal
+    # approximation alone pulled them toward 1/2 and covered about 0.80 here
+    hits = 0
+    for seed in range(60):
+        rng = np.random.default_rng(seed)
+        p = 1 / (1 + np.exp(-rng.normal(0, 1, 12)))
+        proxy = rng.random(12)
+        lo, hi = validate(proxy, rng.binomial(8, p), 8, metric="mmrv", draws=500, seed=seed).interval
+        hits += lo - 1e-9 <= mmrv(proxy, p) <= hi + 1e-9
+    assert hits / 60 >= 0.88
+
+
+def test_linked_rates_options():
+    rng = np.random.default_rng(0)
+    k, n, s = [[0, 3, 8], [1, 4, 7]], 8, [[0.1, 0.5, 0.9], [0.2, 0.4, 0.6]]
+    p, ess = linked_rates(k, n, s, 400, rng, return_ess=True)
+    assert p.shape == (400, 2, 3) and ess.shape == (2,) and np.all((ess > 1) & (ess <= 400))
+    assert linked_rates(k, n, s, 400, rng, p_exact=0.0).shape == (400, 2, 3)

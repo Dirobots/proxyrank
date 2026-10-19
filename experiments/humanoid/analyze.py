@@ -21,6 +21,7 @@ evaluation would, and asks three questions:
 from __future__ import annotations
 
 import itertools
+import os
 import sys
 from multiprocessing import Pool
 from pathlib import Path
@@ -30,7 +31,7 @@ import numpy as np
 import proxyrank as pr
 
 DATA = Path(__file__).parents[1] / "results" / "g1_outcomes.npz"
-BUDGETS = (1, 2, 5, 10)              # trials per direction; x 8 directions per policy
+BUDGETS = (1, 2, 5, 10, 25)          # trials per direction; x 8 directions per policy
 METRICS = ("mmrv", "spearman", "pearson")
 DRAWS = 1000
 COVERAGE = (("pool_indep", False, "independent"), ("pool", False, "linked"), ("cond", True, "linked"))
@@ -98,7 +99,7 @@ def main(reps=300):
     print("| simulator | " + " | ".join(f"true {m}" for m in METRICS) + " |\n" + "|---" * (len(METRICS) + 1) + "|")
     for name, s in zip(names, sims):
         print(f"| {name} | " + " | ".join(f"{float(pr.METRICS[m](s, p_true)):+.3f}" for m in METRICS) + " |")
-    with Pool() as pool:
+    with Pool(int(os.environ.get("WORKERS", 0)) or None) as pool:   # WORKERS caps memory on small machines
         results = pool.map(replicate, [(b, 1000 * b + r) for b in BUDGETS for r in range(reps)], chunksize=4)
     print()
     for m in METRICS:
@@ -115,13 +116,13 @@ def main(reps=300):
                   f"| {tot('claims_pool') / tot('pairs'):.1%} | {rate('wrong_pool', 'claims_pool')} "
                   f"| {tot('claims_cond') / tot('pairs'):.1%} | {rate('wrong_cond', 'claims_cond')} |")
         print("\nInterval coverage per simulator: independent pooled / linked pooled / linked by direction. "
-              "Ceiling-test flag rate (linked, by direction) in brackets.\n")
+              "Ceiling-test flag rate (linked, pooled / by direction) in brackets.\n")
         print("| real trials / policy | " + " | ".join(names) + " |\n" + "|---" * (len(names) + 1) + "|")
         for b in BUDGETS:
             rs = [r for bb, r in results if bb == b]
             mean = lambda key, i: np.mean([r[(m, key, i)] for r in rs])
             cells = [" / ".join(f"{mean('cover_' + t, i):.2f}" for t, _, _ in COVERAGE)
-                     + f" [{mean('flag_cond', i):.2f}]" for i in range(len(names))]
+                     + f" [{mean('flag_pool', i):.2f} / {mean('flag_cond', i):.2f}]" for i in range(len(names))]
             print(f"| {b * real.shape[1]} | " + " | ".join(cells) + " |")
         print()
 
