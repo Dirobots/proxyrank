@@ -15,7 +15,7 @@ Simulators, world models and other proxy evaluators are validated by scoring a f
 ## Install
 
 ```bash
-pip install git+https://github.com/<user>/proxyrank   # numpy + scipy only
+pip install git+https://github.com/Dirobots/proxyrank   # numpy + scipy only
 ```
 
 ## Example
@@ -71,7 +71,7 @@ See [`docs/method.md`](docs/method.md). Real success rates get independent Beta 
 @software{proxyrank,
   title  = {proxyrank: uncertainty for sim-to-real agreement metrics},
   year   = {2026},
-  url    = {https://github.com/<user>/proxyrank}
+  url    = {https://github.com/Dirobots/proxyrank}
 }
 ```
 
