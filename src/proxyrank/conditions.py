@@ -36,11 +36,13 @@ def icc(k, n):
     p_pol = k.sum(-1, keepdims=True) / n.sum(-1, keepdims=True)
     m0 = (n.sum(-1) - (n**2).sum(-1) / n.sum(-1)) / (g - 1)
     msb = (n * (p_cell - p_pol) ** 2).sum(-1) / (g - 1)
-    msw = (k * (1 - p_cell)).sum(-1) / (n.sum(-1) - g)
     with np.errstate(invalid="ignore", divide="ignore"):
+        msw = (k * (1 - p_cell)).sum(-1) / (n.sum(-1) - g)
         rho = (msb - msw) / (msb + (m0 - 1) * msw)
     # policies at 0% or 100% everywhere carry no information about rho
-    return np.clip(np.nan_to_num(np.nanmean(np.where(np.isfinite(rho), rho, np.nan), -1)), 0, 1)
+    ok = np.isfinite(rho)
+    mean = np.where(ok, rho, 0).sum(-1) / np.maximum(ok.sum(-1), 1)
+    return np.clip(mean, 0, 1)
 
 
 def effective_counts(k, n):

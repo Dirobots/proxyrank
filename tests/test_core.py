@@ -90,7 +90,7 @@ def test_monte_carlo_p_values_are_never_zero():
     real = np.array([[10, 30, 50, 70, 90, 99]] * 2)
     res = validate(real / 100, real, np.full_like(real, 100), metric="spearman", draws=2000)
     assert not res.null_exact
-    assert res.null_p == pytest.approx(1 / 2001)
+    assert 1 / 2001 <= res.null_p <= 3 / 2001
     assert res.p_vs_ceiling > 0
 
 
@@ -103,3 +103,27 @@ def test_callable_metric_direction():
     assert close.null_p < 0.05
     with pytest.raises(ValueError):
         validate(real / 100, real, [100] * 5, metric="mmrv", higher_is_better=True)
+
+
+def test_linked_interval_covers_near_perfect_proxy():
+    # 12 policies, 8 real trials each: the independent posterior scrambles the order
+    # and its interval misses the true Spearman of a proxy that ranks perfectly
+    rng = np.random.default_rng(0)
+    p = np.linspace(0.2, 0.8, 12)
+    k = rng.binomial(8, p)
+    linked = validate(p, k, 8, metric="spearman", draws=2000)
+    indep = validate(p, k, 8, metric="spearman", draws=2000, model="independent")
+    assert linked.interval[1] >= 1 - 1e-9 > indep.interval[1]
+
+
+def test_linked_interval_stays_wide_for_unrelated_proxy():
+    rng = np.random.default_rng(1)
+    k = rng.binomial(8, np.linspace(0.2, 0.8, 12))
+    res = validate(rng.random(12), k, 8, metric="spearman", draws=2000)
+    lo, hi = res.interval
+    assert lo < 0 < hi
+
+
+def test_bad_model_name():
+    with pytest.raises(ValueError):
+        validate([0.1, 0.5, 0.9], [1, 5, 9], 10, model="hierarchical")

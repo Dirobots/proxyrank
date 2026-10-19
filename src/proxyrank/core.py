@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from .conditions import effective_counts, grouped_counts
+from .linked import linked_rates
 from .metrics import resolve
 
 __all__ = ["ValidationResult", "Comparison", "validate", "compare", "posterior_rates"]
@@ -133,6 +134,7 @@ def validate(
     seed=0,
     higher_is_better=None,
     by_condition=False,
+    model="linked",
 ) -> ValidationResult:
     """Score a proxy evaluator against real evaluation, with uncertainty.
 
@@ -155,8 +157,14 @@ def validate(
             (N, G) or (T, N, G), with the same G conditions for every policy of
             a task. The target becomes the rate over the population of
             conditions, through a design effect; see ``proxyrank.conditions``.
+        model: posterior of the real rates. "linked" (default) lets the real
+            data decide how far the proxy predicts them; "independent" gives
+            each rate its own ``prior``, which biases the interval low for
+            good proxies. See ``proxyrank.linked``.
     """
     name, fn, higher = resolve(metric, higher_is_better)
+    if model not in ("linked", "independent"):
+        raise ValueError("model must be 'linked' or 'independent'")
     rng = np.random.default_rng(seed)
     deff = None
     if by_condition:
@@ -171,7 +179,10 @@ def validate(
 
     observed = float(_score(fn, proxy_hat, real_hat))
 
-    p_real = rng.beta(k + prior[0], n - k + prior[1], size=(draws, *k.shape))
+    if model == "linked":
+        p_real = linked_rates(k, n, proxy_hat, draws, rng)
+    else:
+        p_real = rng.beta(k + prior[0], n - k + prior[1], size=(draws, *k.shape))
     if proxy_successes is not None:
         p_proxy = posterior_rates(proxy_successes, proxy_trials, draws, rng, prior)
     else:
