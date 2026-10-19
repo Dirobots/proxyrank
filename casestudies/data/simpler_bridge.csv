@@ -1,0 +1,15 @@
+# Source: SIMPLER, arXiv:2405.05941, Table V (final success, WidowX + Bridge, Visual Matching).
+# Real trials: spoon 24, carrot 24 (Appendix B: 2x12); block 24 (2x12); eggplant 30 (inferred: 0.033 = 1/30, 0.233 = 7/30, 0.433 = 13/30).
+task,policy,real_rate,real_trials,visual_matching
+spoon,RT-1-X,0.000,24,0.000
+spoon,Octo-Base,0.333,24,0.125
+spoon,Octo-Small,0.417,24,0.472
+carrot,RT-1-X,0.000,24,0.042
+carrot,Octo-Base,0.250,24,0.083
+carrot,Octo-Small,0.083,24,0.097
+block,RT-1-X,0.000,24,0.000
+block,Octo-Base,0.000,24,0.000
+block,Octo-Small,0.125,24,0.042
+eggplant,RT-1-X,0.000,30,0.000
+eggplant,Octo-Base,0.233,30,0.431
+eggplant,Octo-Small,0.433,30,0.569

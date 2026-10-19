@@ -1,0 +1,19 @@
+[project]
+name = "proxyrank"
+version = "0.1.0"
+description = "Uncertainty, perfect-proxy ceilings and random-ordering nulls for sim-to-real agreement metrics in robot policy evaluation"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+dependencies = ["numpy>=1.24", "scipy>=1.11"]
+keywords = ["robotics", "evaluation", "simulation", "statistics", "sim-to-real", "VLA"]
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

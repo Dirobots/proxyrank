@@ -1,0 +1,23 @@
+# Source: Li et al., "Evaluating Real-World Robot Manipulation Policies in Simulation" (SIMPLER), arXiv:2405.05941, Table IV.
+# Real trial counts from Appendix B: coke can 25 per orientation (75), move near 5x2x6=60, drawer 9x3x2=54, apple 3x9=27.
+# RT-1 (Begin) drawer: real eval stopped after 2 trials (Table IV footnote); apple column has no such note and is kept at 27.
+# Columns: task, policy, real_rate, real_trials, visual_matching, variant_aggregation
+task,policy,real_rate,real_trials,visual_matching,variant_aggregation
+pick_coke_can,RT-1 (Converged),0.853,75,0.857,0.898
+pick_coke_can,RT-1 (15%),0.920,75,0.710,0.813
+pick_coke_can,RT-1-X,0.760,75,0.567,0.490
+pick_coke_can,RT-2-X,0.907,75,0.787,0.823
+pick_coke_can,Octo-Base,0.293,75,0.170,0.006
+pick_coke_can,RT-1 (Begin),0.133,75,0.027,0.022
+move_near,RT-1 (Converged),0.633,60,0.442,0.500
+move_near,RT-1 (15%),0.583,60,0.354,0.446
+move_near,RT-1-X,0.450,60,0.317,0.323
+move_near,RT-2-X,0.733,60,0.779,0.792
+move_near,Octo-Base,0.350,60,0.042,0.031
+move_near,RT-1 (Begin),0.017,60,0.050,0.040
+drawer,RT-1 (Converged),0.870,54,0.730,0.323
+drawer,RT-1 (15%),0.796,54,0.565,0.267
+drawer,RT-1-X,0.630,54,0.597,0.294
+drawer,RT-2-X,0.481,54,0.250,0.353
+drawer,Octo-Base,0.333,54,0.227,0.011
+drawer,RT-1 (Begin),0.000,2,0.139,0.069
