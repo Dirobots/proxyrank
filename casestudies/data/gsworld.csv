@@ -1,0 +1,15 @@
+# source: GSWorld: Closed-Loop Photo-Realistic Simulation Suite for Robotic Manipulation, arXiv:2510.20813, Table I (Visual Benchmarking of Real-world Policies on FR3), Fig. 9
+# proxy: 3D Gaussian Splatting digital twin + physics simulator
+# real_trials: appendix B says 'Real-world validation consisted of 10 experimental trials per policy, each with randomized initial conditions' - read as 10 per task-policy cell (values are multiples of 5%, consistent); sim: 25 seeds per task
+# partial credit: half credit for intermediate steps in both sim and real, so rates are mean partial-credit scores, not binary success rates
+# reported agreement metrics: none numeric in Table I (paper says 'strong correlation'); table Avg row: ACT real 50.0 sim 41.0; Pi0 real 55.0 sim 43.5
+# conditions: randomized object placement per trial; per-task values published, per-trial outcomes not
+task,policy,real_rate,real_trials,proxy_score
+Place Box,ACT,0.50,10 (per-policy; see header),0.44
+Place Box,Pi0,0.60,10 (per-policy; see header),0.52
+Pour Sauce,ACT,0.40,10 (per-policy; see header),0.28
+Pour Sauce,Pi0,0.60,10 (per-policy; see header),0.40
+Stack Cans,ACT,0.50,10 (per-policy; see header),0.42
+Stack Cans,Pi0,0.40,10 (per-policy; see header),0.32
+Arrange Cans,ACT,0.60,10 (per-policy; see header),0.48
+Arrange Cans,Pi0,0.60,10 (per-policy; see header),0.50

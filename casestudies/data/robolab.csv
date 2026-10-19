@@ -1,0 +1,27 @@
+# source: RoboLab: A High-Fidelity Simulation Benchmark for Analysis of Task Generalist Policies, arXiv:2604.09860v1, Table VII (expanded Table IV in v1; Section IV-E 'Real Robot Verification')
+# proxy: RoboLab simulator (Isaac-based DROID Franka replica); policies trained only on real DROID data
+# values are percentages in the paper, divided by 100 here
+# real_trials: not stated. Real percentages like 90.9, 83.3, 33.3 imply per-cell denominators of about 11, 6, 3/6/9, so counts differ by cell. Sim: 'each task repeated 10 times with a fixed seed'
+# omitted cells: '-' in the paper (real not run for PaliGemma on BananaInBowl, BananasOutOfBin, PickOranges; FoodPacking2Cans has no sim result)
+# printed totals (all six tasks): real pi0.5 79.5, pi0-FAST 34.1, pi0 63.2, PaliGemma 0.0; sim 74.0, 42.0, 18.0, 4.0. Paper reports no Pearson/MMRV for this real-vs-sim comparison (it reports Spearman 1.00 / Pearson 0.68 of sim vs RoboArena Elo, different comparison, v2+ only)
+# pi0 is called out by the authors as an outlier (real 63.2 vs sim 18.0); v1 table and v2 differ in table numbering (Table V in v2 text)
+# FoodPacking2Cans real values (pi0.5 0.40, pi0-FAST 0.00, pi0 0.40) have no sim counterpart and are omitted
+# conditions: tasks differ in scene; per-task counts of real trials are not published
+task,policy,real_rate,real_trials,proxy_score
+BananaInBowl,pi0.5,0.909,not stated,1.00
+BananaInBowl,pi0-FAST,0.800,not stated,0.70
+BananaInBowl,pi0,0.800,not stated,0.20
+BananaAndCubeInBowl,pi0.5,1.000,not stated,0.90
+BananaAndCubeInBowl,pi0-FAST,0.300,not stated,0.60
+BananaAndCubeInBowl,pi0,0.900,not stated,0.50
+BananaAndCubeInBowl,PaliGemma,0.000,not stated,0.00
+BananasOutOfBin,pi0.5,0.833,not stated,0.50
+BananasOutOfBin,pi0-FAST,0.600,not stated,0.30
+BananasOutOfBin,pi0,1.000,not stated,0.00
+PickOranges,pi0.5,0.333,not stated,0.60
+PickOranges,pi0-FAST,0.000,not stated,0.00
+PickOranges,pi0,0.400,not stated,0.00
+ToolsPickingDrill,pi0.5,1.000,not stated,0.70
+ToolsPickingDrill,pi0-FAST,0.000,not stated,0.50
+ToolsPickingDrill,pi0,0.000,not stated,0.20
+ToolsPickingDrill,PaliGemma,0.000,not stated,0.20

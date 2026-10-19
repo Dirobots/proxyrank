@@ -157,7 +157,7 @@ def recipe():
 
 if __name__ == "__main__":
     print("# Reanalysis of published sim-to-real validations\n")
-    print(f"proxyrank {pr.__version__}, {DRAWS} draws, Jeffreys prior, seed 0. Proxy (simulator) noise is ignored,")
+    print(f"proxyrank {pr.__version__}, {DRAWS} draws, linked posterior, seed 0. Proxy (simulator) noise is ignored,")
     print("which makes every interval below narrower than the truth.\n")
     simpler_google()
     simpler_bridge()

@@ -1,0 +1,24 @@
+# source: Genie Sim 3.0: A High-Fidelity Comprehensive Simulation Platform for Humanoid Robot, arXiv:2601.02078 v3 Table I (v1 Table I identical except the cell noted below); Fig. 7 scatter
+# proxy: Genie Sim 3.0 physics simulator (Isaac-Sim based) evaluating the same checkpoints as the physical AgiBot G1
+# 'policy' = the same base policy pi0.5 fine-tuned on 4 different data configurations (200/500 real episodes, 500/1500 synthetic episodes); the four 'policies' are training-data variants, not different architectures
+# real_trials: 50 per training configuration (v3: 'each training configuration is evaluated over 50 trials in real-world environments and in simulation'; v1: 50 real, 250 sim). Assumed per task-config cell; paper wording is per configuration/experiment
+# reported agreement metric: R^2 = 0.924, best-fit slope ~1.045, over all 16 (task, configuration) points pooled (Fig. 7); no per-task MMRV/Pearson
+# version discrepancy: Grasp Targets, pi0.5-1500ep-sim, sim = 0.72 in v3 and 0.80 in v1. v3 value used. v3 Table II lists Organize Items sim-to-sim = 0.48 vs 0.52 in Table I (Table II pools 500~1500 sim episodes, so not directly comparable)
+# conditions: tasks differ (4 tabletop tasks); per-cell counts published only as rates
+task,policy,real_rate,real_trials,proxy_score
+Select Color,pi0.5-200ep-real,0.53,50,0.45
+Recognize Size,pi0.5-200ep-real,0.56,50,0.50
+Grasp Targets,pi0.5-200ep-real,0.39,50,0.34
+Organize Objects,pi0.5-200ep-real,0.30,50,0.25
+Select Color,pi0.5-500ep-real,0.73,50,0.75
+Recognize Size,pi0.5-500ep-real,0.75,50,0.75
+Grasp Targets,pi0.5-500ep-real,0.58,50,0.54
+Organize Objects,pi0.5-500ep-real,0.40,50,0.45
+Select Color,pi0.5-500ep-sim,0.60,50,0.53
+Recognize Size,pi0.5-500ep-sim,0.63,50,0.50
+Grasp Targets,pi0.5-500ep-sim,0.33,50,0.29
+Organize Objects,pi0.5-500ep-sim,0.35,50,0.39
+Select Color,pi0.5-1500ep-sim,0.85,50,0.86
+Recognize Size,pi0.5-1500ep-sim,0.94,50,0.93
+Grasp Targets,pi0.5-1500ep-sim,0.71,50,0.72
+Organize Objects,pi0.5-1500ep-sim,0.60,50,0.52

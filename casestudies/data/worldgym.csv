@@ -1,0 +1,60 @@
+# source: Quevedo, Sharma, Sun, Suryavanshi, Liang, Yang. "WorldGym: World Model as An Environment for Policy Evaluation" (v1 title: "Evaluating Robot Policies in a World Model"). arXiv:2506.00613v3
+# table: Table 5 (Appendix E.3), 17 Bridge/WidowX tasks from OpenVLA (Kim et al.) eval; real-world successes are copied by WorldGym authors from the OpenVLA paper (no new real trials)
+# real_trials: 10 per task per policy (Table 5 column "# Trials"); real_rate = printed #successes / 10; proxy_score = printed WorldGym #successes / 10
+# proxy: action-conditioned autoregressive video world model + VLM judge; each of 10 world-model rollouts starts from the first frame of the corresponding real trial (so initial conditions paired)
+# fractional successes (e.g. 3.5) are printed as such in the paper (partial credit 0.5 in OpenVLA protocol)
+# paper-reported metrics: Pearson r=0.78 (p<0.001) over per-task success rates pooled across 3 policies (Sec 4.1/Fig 4a); mean success real vs WorldGym: RT-1-X 18.5+-4.0 vs 15.5+-3.4 ; Octo 20.0+-5.3 vs 23.82+-4.3 ; OpenVLA 70.6+-6.1 vs 67.4+-4.9 (printed, in %). No MMRV, no Spearman reported.
+# conditions: each task is a distinct scene/condition (randomized initial object locations over the 10 trials); per-task counts ARE published
+# note: mean rows recomputed by me from the 17 rows are checked in INDEX.md
+task,policy,real_rate,real_trials,proxy_score
+"Put Eggplant into Pot (Easy Version)",RT-1-X,0.100,10,0.100
+"Put Eggplant into Pot (Easy Version)",Octo,0.500,10,0.100
+"Put Eggplant into Pot (Easy Version)",OpenVLA,1.000,10,0.700
+"Put Eggplant into Pot",RT-1-X,0.000,10,0.000
+"Put Eggplant into Pot",Octo,0.100,10,0.200
+"Put Eggplant into Pot",OpenVLA,1.000,10,0.600
+"Put Cup from Counter into Sink",RT-1-X,0.100,10,0.300
+"Put Cup from Counter into Sink",Octo,0.100,10,0.300
+"Put Cup from Counter into Sink",OpenVLA,0.700,10,0.900
+"Put Eggplant into Pot (w/ Clutter)",RT-1-X,0.100,10,0.050
+"Put Eggplant into Pot (w/ Clutter)",Octo,0.350,10,0.350
+"Put Eggplant into Pot (w/ Clutter)",OpenVLA,0.750,10,0.800
+"Put Yellow Corn on Pink Plate",RT-1-X,0.100,10,0.300
+"Put Yellow Corn on Pink Plate",Octo,0.400,10,0.600
+"Put Yellow Corn on Pink Plate",OpenVLA,0.900,10,0.950
+"Lift Eggplant",RT-1-X,0.300,10,0.200
+"Lift Eggplant",Octo,0.050,10,0.150
+"Lift Eggplant",OpenVLA,0.750,10,0.750
+"Put Carrot on Plate (w/ Height Change)",RT-1-X,0.200,10,0.050
+"Put Carrot on Plate (w/ Height Change)",Octo,0.100,10,0.300
+"Put Carrot on Plate (w/ Height Change)",OpenVLA,0.450,10,0.600
+"Put Carrot on Plate",RT-1-X,0.100,10,0.000
+"Put Carrot on Plate",Octo,0.000,10,0.100
+"Put Carrot on Plate",OpenVLA,0.800,10,0.400
+"Flip Pot Upright",RT-1-X,0.200,10,0.300
+"Flip Pot Upright",Octo,0.600,10,0.100
+"Flip Pot Upright",OpenVLA,0.800,10,0.500
+"Lift AAA Battery",RT-1-X,0.000,10,0.100
+"Lift AAA Battery",Octo,0.000,10,0.000
+"Lift AAA Battery",OpenVLA,0.700,10,0.400
+"Move Skull into Drying Rack",RT-1-X,0.100,10,0.200
+"Move Skull into Drying Rack",Octo,0.000,10,0.300
+"Move Skull into Drying Rack",OpenVLA,0.500,10,0.500
+"Lift White Tape",RT-1-X,0.300,10,0.100
+"Lift White Tape",Octo,0.000,10,0.100
+"Lift White Tape",OpenVLA,0.100,10,0.600
+"Take Purple Grapes out of Pot",RT-1-X,0.600,10,0.500
+"Take Purple Grapes out of Pot",Octo,0.000,10,0.200
+"Take Purple Grapes out of Pot",OpenVLA,0.400,10,0.400
+"Stack Blue Cup on Pink Cup",RT-1-X,0.050,10,0.000
+"Stack Blue Cup on Pink Cup",Octo,0.000,10,0.000
+"Stack Blue Cup on Pink Cup",OpenVLA,0.450,10,0.600
+"Put {Eggplant, Red Bottle} into Pot",RT-1-X,0.250,10,0.050
+"Put {Eggplant, Red Bottle} into Pot",Octo,0.400,10,0.500
+"Put {Eggplant, Red Bottle} into Pot",OpenVLA,0.750,10,0.900
+"Lift {Cheese, Red Chili Pepper}",RT-1-X,0.150,10,0.250
+"Lift {Cheese, Red Chili Pepper}",Octo,0.250,10,0.250
+"Lift {Cheese, Red Chili Pepper}",OpenVLA,1.000,10,1.000
+"Put {Blue Cup, Pink Cup} on Plate",RT-1-X,0.500,10,0.150
+"Put {Blue Cup, Pink Cup} on Plate",Octo,0.550,10,0.500
+"Put {Blue Cup, Pink Cup} on Plate",OpenVLA,0.950,10,0.850

@@ -1,0 +1,29 @@
+# source: Ctrl-World: A Controllable Generative World Model for Robot Manipulation, arXiv:2510.10125, appendix Table 3 (also Figure 7)
+# proxy: action-conditioned multi-view video world model (Ctrl-World); success judged by human annotators on world-model rollouts
+# metric in this file: Success Rate (real vs world model)
+# real_trials: not stated in the paper (values are multiples of 0.05, consistent with but not proof of 20 trials per cell)
+# reported agreement metrics: none (no Pearson/MMRV/Spearman printed; paper claims ranking alignment qualitatively)
+# conditions: real and world-model rollouts share the same initial observations; scene is one DROID setup, tasks differ; per-task values published, per-trial outcomes not
+# companion file ctrlworld_2510.10125_instrfollow.csv has Instruction Following rates
+task,policy,real_rate,real_trials,proxy_score
+Pick-Place,pi0,0.70,not stated,0.55
+Pick-Place,pi0-fast,0.85,not stated,0.70
+Pick-Place,pi0.5,0.85,not stated,0.70
+Fold-Towel,pi0,0.40,not stated,0.20
+Fold-Towel,pi0-fast,0.55,not stated,0.40
+Fold-Towel,pi0.5,0.75,not stated,0.65
+Drawer,pi0,0.05,not stated,0.00
+Drawer,pi0-fast,0.15,not stated,0.05
+Drawer,pi0.5,0.80,not stated,0.30
+Wipe-table,pi0,0.20,not stated,0.00
+Wipe-table,pi0-fast,0.50,not stated,0.35
+Wipe-table,pi0.5,0.80,not stated,0.65
+Close-laptop,pi0,0.15,not stated,0.00
+Close-laptop,pi0-fast,0.50,not stated,0.00
+Close-laptop,pi0.5,0.70,not stated,0.05
+Pull-tissue,pi0,0.30,not stated,0.20
+Pull-tissue,pi0-fast,0.10,not stated,0.0
+Pull-tissue,pi0.5,0.75,not stated,0.50
+Stack,pi0,0.60,not stated,0.40
+Stack,pi0-fast,0.70,not stated,0.55
+Stack,pi0.5,0.65,not stated,0.55
