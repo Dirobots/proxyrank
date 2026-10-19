@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from .conditions import effective_counts, grouped_counts
 from .metrics import resolve
 
 __all__ = ["ValidationResult", "Comparison", "validate", "compare", "posterior_rates"]
@@ -131,6 +132,7 @@ def validate(
     prior=JEFFREYS,
     seed=0,
     higher_is_better=None,
+    by_condition=False,
 ) -> ValidationResult:
     """Score a proxy evaluator against real evaluation, with uncertainty.
 
@@ -149,10 +151,18 @@ def validate(
         seed: RNG seed; results are deterministic given it.
         higher_is_better: direction of a callable metric (default True);
             must match the built-in direction when ``metric`` is a name.
+        by_condition: real counts carry a trailing condition axis, shape
+            (N, G) or (T, N, G), with the same G conditions for every policy of
+            a task. The target becomes the rate over the population of
+            conditions, through a design effect; see ``proxyrank.conditions``.
     """
     name, fn, higher = resolve(metric, higher_is_better)
     rng = np.random.default_rng(seed)
-    k, n = _counts(real_successes, real_trials)
+    deff = None
+    if by_condition:
+        k, n, deff = effective_counts(*grouped_counts(real_successes, real_trials))
+    else:
+        k, n = _counts(real_successes, real_trials)
     proxy_hat = np.atleast_2d(np.asarray(proxy, dtype=float))
     if proxy_hat.shape != k.shape:
         raise ValueError(f"proxy shape {proxy_hat.shape} != real shape {k.shape}")
@@ -161,7 +171,7 @@ def validate(
 
     observed = float(_score(fn, proxy_hat, real_hat))
 
-    p_real = posterior_rates(k, n, draws, rng, prior)
+    p_real = rng.beta(k + prior[0], n - k + prior[1], size=(draws, *k.shape))
     if proxy_successes is not None:
         p_proxy = posterior_rates(proxy_successes, proxy_trials, draws, rng, prior)
     else:
@@ -170,7 +180,9 @@ def validate(
 
     # Perfect proxy: its scores are the true real rates; the real side is re-sampled
     # with the same trial budget. Uses posterior draws so the truth is not taken as known.
-    real_rep = rng.binomial(n.astype(int), p_real) / n
+    # effective counts can be fractional; the replicate uses the nearest whole budget
+    n_rep = np.maximum(np.round(n), 1)
+    real_rep = rng.binomial(n_rep.astype(int), p_real) / n_rep
     ceiling = _score(fn, p_real, real_rep)
 
     null, exact = _null_draws(fn, proxy_hat, real_hat, draws, rng)
@@ -221,6 +233,7 @@ def compare(
     prior=JEFFREYS,
     seed=0,
     higher_is_better=None,
+    by_condition=False,
 ) -> Comparison:
     """Compare two proxies scored against the *same* real evaluation.
 
@@ -229,12 +242,15 @@ def compare(
     """
     name, fn, higher = resolve(metric, higher_is_better)
     rng = np.random.default_rng(seed)
-    k, n = _counts(real_successes, real_trials)
+    if by_condition:
+        k, n, _ = effective_counts(*grouped_counts(real_successes, real_trials))
+    else:
+        k, n = _counts(real_successes, real_trials)
     a = np.atleast_2d(np.asarray(proxy_a, dtype=float))
     b = np.atleast_2d(np.asarray(proxy_b, dtype=float))
     if a.shape != k.shape or b.shape != k.shape:
         raise ValueError("proxy_a, proxy_b and real counts must share a shape")
-    p = posterior_rates(k, n, draws, rng, prior)
+    p = rng.beta(k + prior[0], n - k + prior[1], size=(draws, *k.shape))
     diff = _score(fn, np.broadcast_to(a, p.shape), p) - _score(fn, np.broadcast_to(b, p.shape), p)
     observed = float(_score(fn, a, k / n) - _score(fn, b, k / n))
     q = ((1 - level) / 2, (1 + level) / 2)
