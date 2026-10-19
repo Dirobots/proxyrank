@@ -5,6 +5,7 @@
 # reported agreement metric: R^2 = 0.924, best-fit slope ~1.045, over all 16 (task, configuration) points pooled (Fig. 7); no per-task MMRV/Pearson
 # version discrepancy: Grasp Targets, pi0.5-1500ep-sim, sim = 0.72 in v3 and 0.80 in v1. v3 value used. v3 Table II lists Organize Items sim-to-sim = 0.48 vs 0.52 in Table I (Table II pools 500~1500 sim episodes, so not directly comparable)
 # conditions: tasks differ (4 tabletop tasks); per-cell counts published only as rates
+# check (2026-10-19): these 16 cells give r^2 = 0.940, slope 1.025; with the v1 value 0.80 for Grasp Targets/1500ep-sim they give r^2 = 0.9244 and slope 1.045, the Fig. 7 numbers, so Fig. 7 was computed from the v1 table
 task,policy,real_rate,real_trials,proxy_score
 Select Color,pi0.5-200ep-real,0.53,50,0.45
 Recognize Size,pi0.5-200ep-real,0.56,50,0.50

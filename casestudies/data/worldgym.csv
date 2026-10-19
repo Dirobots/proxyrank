@@ -6,6 +6,7 @@
 # paper-reported metrics: Pearson r=0.78 (p<0.001) over per-task success rates pooled across 3 policies (Sec 4.1/Fig 4a); mean success real vs WorldGym: RT-1-X 18.5+-4.0 vs 15.5+-3.4 ; Octo 20.0+-5.3 vs 23.82+-4.3 ; OpenVLA 70.6+-6.1 vs 67.4+-4.9 (printed, in %). No MMRV, no Spearman reported.
 # conditions: each task is a distinct scene/condition (randomized initial object locations over the 10 trials); per-task counts ARE published
 # note: mean rows recomputed by me from the 17 rows are checked in INDEX.md
+# check (2026-10-19): pooled Pearson over the 51 cells = 0.785 (paper 0.78); per-policy means and standard errors match the printed ones
 task,policy,real_rate,real_trials,proxy_score
 "Put Eggplant into Pot (Easy Version)",RT-1-X,0.100,10,0.100
 "Put Eggplant into Pot (Easy Version)",Octo,0.500,10,0.100

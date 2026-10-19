@@ -30,8 +30,8 @@ print(pr.validate(sim, k, 75, metric="spearman"))
 spearman over 6 policies x 1 task(s)
   observed            +0.771
   95% interval        [+0.771, +1.000]
-  perfect-proxy ceil  +0.936  [+0.771, +1.000]
-  P(perfect proxy scores this badly or worse) = 0.044
+  perfect-proxy ceil  +0.943  [+0.771, +1.000]
+  P(perfect proxy scores this badly or worse) = 0.034
   P(random ordering scores this well or better) = 0.051 (exact)
 ```
 

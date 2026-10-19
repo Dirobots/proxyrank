@@ -4,6 +4,7 @@
 # partial credit: half credit for intermediate steps in both sim and real, so rates are mean partial-credit scores, not binary success rates
 # reported agreement metrics: none numeric in Table I (paper says 'strong correlation'); table Avg row: ACT real 50.0 sim 41.0; Pi0 real 55.0 sim 43.5
 # conditions: randomized object placement per trial; per-task values published, per-trial outcomes not
+# check (2026-10-19): cells match arXiv PDF Table I; ACT sim cells average 40.5, the paper prints 41.0; Pi0 and both real averages match
 task,policy,real_rate,real_trials,proxy_score
 Place Box,ACT,0.50,10 (per-policy; see header),0.44
 Place Box,Pi0,0.60,10 (per-policy; see header),0.52

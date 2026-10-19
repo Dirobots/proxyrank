@@ -7,6 +7,7 @@
 # pi0 is called out by the authors as an outlier (real 63.2 vs sim 18.0); v1 table and v2 differ in table numbering (Table V in v2 text)
 # FoodPacking2Cans real values (pi0.5 0.40, pi0-FAST 0.00, pi0 0.40) have no sim counterpart and are omitted
 # conditions: tasks differ in scene; per-task counts of real trials are not published
+# check (2026-10-19): cells match arXiv v1 Table VII; the per-cell real counts cannot be recovered from the printed totals (22 to 225 integer solutions per policy with n <= 15), so n = 10 stays an assumption
 task,policy,real_rate,real_trials,proxy_score
 BananaInBowl,pi0.5,0.909,not stated,1.00
 BananaInBowl,pi0-FAST,0.800,not stated,0.70
