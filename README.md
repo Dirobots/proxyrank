@@ -2,6 +2,8 @@
 
 Uncertainty for sim-to-real agreement metrics in robot policy evaluation.
 
+![demo](docs/demo.gif)
+
 Simulators, world models and other proxy evaluators are validated by scoring a few policies in both the proxy and the real world, then reporting MMRV, Spearman or Pearson. The real side of that table is a handful of binomial counts, often 20–75 trials per cell, so the agreement score is itself an estimate. proxyrank reports, for any such score:
 
 | quantity | question it answers |
